@@ -153,3 +153,14 @@ coin.addEventListener('touchstart', (event) => {
         }, 1000);
     }
 });
+
+// Get the user's information from Telegram API
+fetch('https://api.telegram.org/bot7731301271:AAEdXNo1ygFTxhdjd2WT7cedw1Z1bbPkgkM/getMe')
+  .then(response => response.json())
+  .then(data => {
+    const userName = data.result.username;
+
+    // Display the username on the webpage
+    document.querySelector('.name').textContent = userName;
+  })
+  .catch(error => console.error('Error:', error));
