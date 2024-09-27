@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tap Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+
+    #game-container {
+      width: 640px;
+      height: 480px;
+      margin: 40px auto;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      padding: 20px;
+      text-align: center;
+    }
+
+    #tap-target {
+      width: 100px;
+      height: 100px;
+      background-color: #f00;
+      border-radius: 50%;
+      cursor: pointer;
+      margin: 20px auto;
+      position: absolute;
+    }
+
+    #score-display {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    #level-display {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    #time-display {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    #user-profile {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    #coin-balance {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <div id="user-profile">User: <span id="username">John Doe</span></div>
+    <div id="coin-balance">Coin Balance: <span id="coin-balance-amount">100</span> coins</div>
+    <div id="tap-target"></div>
+    <div id="score-display">Score: 0</div>
+    <div id="level-display">Level: 1</div>
+    <div id="time-display">Time: 60</div>
+  </div>
+
+  <script>
+    // Telegram Mini App settings
+    const botToken = '7731301271:AAEdXNo1ygFTxhdjd2WT7cedw1Z1bbPkgkM';
+    const botUsername = 'Au_Gold_Official_Bot';
+    const appId = 'YOUR_APP_ID';
+    const appTitle = 'Tap Game';
+
+    // Initialize Telegram Mini App
+    const tg = window.Telegram.WebApp;
+
+    // Set up the game
+    let score = 0;
+    let level = 1;
+    let time = 60;
+    let coinBalance = 100;
+    let tapTarget = document.getElementById('tap-target');
+    let scoreDisplay = document.getElementById('score-display');
+    let levelDisplay = document.getElementById('level-display');
+    let timeDisplay = document.getElementById('time-display');
+    let username = document.getElementById('username');
+    let coinBalanceAmount = document.getElementById('coin-balance-amount');
+
+    // Set the username
+    username.textContent = tg.initDataUnsafe.user.username;
+
+    tapTarget.addEventListener('click', () => {
+      score++;
+      scoreDisplay.textContent = `Score: ${score}`;
+      // Add some animation to the tap target
+      tapTarget.style.transform = 'scale(1.2)';
+      setTimeout(() => {
+        tapTarget.style.transform = 'scale(1)';
+      }, 200);
+
+      // Award coins for tapping the target
+      coinBalance += 10;
+      coinBalanceAmount.textContent = coinBalance;
+    });
+
+    // Add some random movement to the tap target
+    setInterval(() => {
+      tapTarget.style.top = `${Math.random() * 400}px`;
+      tapTarget.style.left = `${Math.random() * 400}px`;
+    }, 1000);
+
+    // Update the level and time displays
+    setInterval(() => {
+      if (score >= 10 && score < 20) {
+        level = 2;
+        levelDisplay.textContent = `Level: ${level}`;
+      } else if (score >= 20 && score < 30) {
+        level = 3;
+        levelDisplay.textContent = `Level: ${level}`;
+      } else if (score >= 30) {
+        level = 4;
+        levelDisplay.textContent = `Level: ${level}`;
+      }
+
+      time--;
+      timeDisplay.textContent = `Time: ${time}`;
+
+      if (time <= 0) {
+        alert('Game Over!');
+        score = 0;
+        level = 1;
+        time = 60;
+        scoreDisplay.textContent = `Score: ${score}`;
+        levelDisplay.textContent = `Level: ${level}`;
+        timeDisplay.textContent = `Time: ${time}`;
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
