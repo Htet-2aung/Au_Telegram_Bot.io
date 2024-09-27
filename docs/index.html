@@ -2,10 +2,12 @@
 <html>
 <head>
   <title>Tap Game</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
+      font-family: Open Sans, sans-serif;
+      background-color: #f9f9f9;
     }
 
     #game-container {
@@ -18,10 +20,39 @@
       text-align: center;
     }
 
+    #header {
+      background-color: #3498db;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+
+    #header-title {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    #user-profile {
+      margin-top: 20px;
+    }
+
+    #user-profile-picture {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 5px solid #f1c40f;
+    }
+
+    #user-profile-info {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
     #tap-target {
       width: 100px;
       height: 100px;
-      background-color: #f00;
+      background-color: #f1c40f;
       border-radius: 50%;
       cursor: pointer;
       margin: 20px auto;
@@ -31,48 +62,100 @@
     #score-display {
       font-size: 24px;
       font-weight: bold;
+      background-color: #3498db;
+      color: #fff;
+      padding: 10px;
+      border-radius: 10px;
       margin-bottom: 20px;
     }
 
     #level-display {
-      font-size: 24px;
+      font-size: 18px;
       font-weight: bold;
+      background-color: #f1c40f;
+      color: #fff;
+      padding: 10px;
+      border-radius: 10px;
       margin-bottom: 20px;
     }
 
     #time-display {
       font-size: 24px;
       font-weight: bold;
+      background-color: #3498db;
+      color: #fff;
+      padding: 10px;
+      border-radius: 10px;
       margin-bottom: 20px;
     }
 
-    #user-profile {
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 20px;
+    #footer {
+      background-color: #3498db;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+      margin-top: 20px;
     }
 
-    #coin-balance {
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 20px;
+    #share-button {
+      background-color: #f1c40f;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #3498db;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .bottom-nav a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 20px;
+    }
+
+    .bottom-nav a:hover {
+      color: #f1c40f;
     }
   </style>
 </head>
 <body>
   <div id="game-container">
-    <div id="user-profile">User: <span id="username">John Doe</span></div>
-    <div id="coin-balance">Coin Balance: <span id="coin-balance-amount">100</span> coins</div>
+    <div id="header">
+      <div id="header-title">Tap Game</div>
+    </div>
+    <div id="user-profile">
+      <img id="user-profile-picture" src="https://picsum.photos/100/100">
+      <div id="user-profile-info">John Doe</div>
+    </div>
     <div id="tap-target"></div>
     <div id="score-display">Score: 0</div>
     <div id="level-display">Level: 1</div>
     <div id="time-display">Time: 60</div>
+    <div id="footer">
+      <button id="share-button">Share Your Progress!</button>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="#" class="bi bi-coin" style="font-size: 24px;"> Tap Coin</a>
+    <a href="#" class="bi bi-arrow-up" style="font-size: 24px;"> Upgrade</a>
+    <a href="#" class="bi bi-wallet" style="font-size: 24px;"> Earn</a>
+    <a href="#" class="bi bi-airplane" style="font -size: 24px;"> Airdrop</a>
   </div>
 
   <script>
     // Telegram Mini App settings
     const botToken = '7731301271:AAEdXNo1ygFTxhdjd2WT7cedw1Z1bbPkgkM';
-    const botUsername = 'Au_Gold_Official_Bot';
+    const botUsername = '@Au_Gold_Official_Bot';
     const appId = 'YOUR_APP_ID';
     const appTitle = 'Tap Game';
 
@@ -83,16 +166,10 @@
     let score = 0;
     let level = 1;
     let time = 60;
-    let coinBalance = 100;
     let tapTarget = document.getElementById('tap-target');
     let scoreDisplay = document.getElementById('score-display');
     let levelDisplay = document.getElementById('level-display');
     let timeDisplay = document.getElementById('time-display');
-    let username = document.getElementById('username');
-    let coinBalanceAmount = document.getElementById('coin-balance-amount');
-
-    // Set the username
-    username.textContent = tg.initDataUnsafe.user.username;
 
     tapTarget.addEventListener('click', () => {
       score++;
@@ -102,43 +179,12 @@
       setTimeout(() => {
         tapTarget.style.transform = 'scale(1)';
       }, 200);
-
-      // Award coins for tapping the target
-      coinBalance += 10;
-      coinBalanceAmount.textContent = coinBalance;
     });
 
     // Add some random movement to the tap target
     setInterval(() => {
       tapTarget.style.top = `${Math.random() * 400}px`;
       tapTarget.style.left = `${Math.random() * 400}px`;
-    }, 1000);
-
-    // Update the level and time displays
-    setInterval(() => {
-      if (score >= 10 && score < 20) {
-        level = 2;
-        levelDisplay.textContent = `Level: ${level}`;
-      } else if (score >= 20 && score < 30) {
-        level = 3;
-        levelDisplay.textContent = `Level: ${level}`;
-      } else if (score >= 30) {
-        level = 4;
-        levelDisplay.textContent = `Level: ${level}`;
-      }
-
-      time--;
-      timeDisplay.textContent = `Time: ${time}`;
-
-      if (time <= 0) {
-        alert('Game Over!');
-        score = 0;
-        level = 1;
-        time = 60;
-        scoreDisplay.textContent = `Score: ${score}`;
-        levelDisplay.textContent = `Level: ${level}`;
-        timeDisplay.textContent = `Time: ${time}`;
-      }
     }, 1000);
   </script>
 </body>
